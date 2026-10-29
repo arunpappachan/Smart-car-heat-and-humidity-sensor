@@ -35,27 +35,27 @@ export default function Dashboard() {
   const [tableTotal, setTableTotal] = useState(0);
   const [statusFilter, setStatusFilter] = useState('ALL');
 
-  // Load latest telemetry & stats
+  // Load latest telemetry & stats with error isolation
   const fetchTelemetry = useCallback(async () => {
     setIsLoading(true);
     try {
-      const [latestRes, statsRes, alertsRes] = await Promise.all([
+      const [latestResult, statsResult, alertsResult] = await Promise.allSettled([
         getLatestReading(deviceId),
         getSensorStats(deviceId, '24h'),
         getAlerts({ deviceId, limit: 15 }),
       ]);
 
-      if (latestRes.success) {
-        setLatest(latestRes.latest);
-        setIsOnline(latestRes.is_online);
+      if (latestResult.status === 'fulfilled' && latestResult.value && latestResult.value.success) {
+        setLatest(latestResult.value.latest);
+        setIsOnline(latestResult.value.is_online);
       }
 
-      if (statsRes.success) {
-        setStats(statsRes.stats);
+      if (statsResult.status === 'fulfilled' && statsResult.value && statsResult.value.success) {
+        setStats(statsResult.value.stats);
       }
 
-      if (alertsRes.success) {
-        setAlerts(alertsRes.alerts);
+      if (alertsResult.status === 'fulfilled' && alertsResult.value && alertsResult.value.success) {
+        setAlerts(alertsResult.value.alerts);
       }
     } catch (err) {
       console.error('[Telemetry fetch error]:', err);

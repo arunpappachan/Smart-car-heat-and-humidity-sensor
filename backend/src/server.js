@@ -14,24 +14,16 @@ const simulator = require('./services/simulator');
 const app = express();
 const server = http.createServer(app);
 
-// CORS configuration supporting Docker, React dev server, and local network ESP32
-const allowedOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim())
-  : ['http://localhost:8080', 'http://localhost:5173', 'http://localhost:3000', '*'];
-
+// Bulletproof CORS allowing smart-car-frontend.onrender.com, localhost, and ESP32
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, or ESP32)
-      if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(null, true); // Permissive in dev to avoid blocking ESP32
-    },
+    origin: true, // Echo request origin (complies with credentials: true)
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key', 'x-device-key'],
     credentials: true,
   })
 );
+app.options('*', cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,8 +31,9 @@ app.use(express.urlencoded({ extended: true }));
 // Socket.IO Real-Time Engine Setup
 const io = new Server(server, {
   cors: {
-    origin: '*',
+    origin: true,
     methods: ['GET', 'POST'],
+    credentials: true,
   },
   pingTimeout: 10000,
   pingInterval: 5000,
