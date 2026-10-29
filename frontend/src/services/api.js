@@ -2,16 +2,11 @@ import axios from 'axios';
 import { io } from 'socket.io-client';
 
 // Determine API base URL
-// If running on Render (e.g. smart-car-frontend.onrender.com), point to smart-car-backend.onrender.com
 let rawBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
 
-if (!rawBaseUrl && typeof window !== 'undefined') {
-  if (window.location.hostname.includes('onrender.com')) {
-    rawBaseUrl = window.location.origin.replace('smart-car-frontend', 'smart-car-backend');
-    if (!rawBaseUrl.includes('smart-car-backend')) {
-      rawBaseUrl = 'https://smart-car-backend.onrender.com';
-    }
-  }
+// Fix Render internal hostnames lacking TLD (e.g. 'smart-car-backend' -> 'https://smart-car-backend.onrender.com')
+if (!rawBaseUrl || rawBaseUrl === 'smart-car-backend' || rawBaseUrl === 'https://smart-car-backend' || (typeof window !== 'undefined' && window.location.hostname.includes('onrender.com'))) {
+  rawBaseUrl = 'https://smart-car-backend.onrender.com';
 }
 
 if (rawBaseUrl && !rawBaseUrl.startsWith('http://') && !rawBaseUrl.startsWith('https://')) {
