@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  # ==============================================================================
+  # Service 1: PostgreSQL Database
+  # Persistent relational storage for telemetry readings, alerts, and devices
+  # ==============================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: smart_car_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-smart_car_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-smart_car_pass_2026}
+      POSTGRES_DB: ${DB_NAME:-smart_car_iot}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-smart_car_user} -d ${DB_NAME:-smart_car_iot}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - smart_car_net
+
+  # ==============================================================================
+  # Service 2: Node.js Express & Socket.IO Backend API
+  # REST API, threshold calculations, and real-time WebSocket broadcasting
+  # ==============================================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smart_car_backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-smart_car_user}
+      DB_PASSWORD: ${DB_PASSWORD:-smart_car_pass_2026}
+      DB_NAME: ${DB_NAME:-smart_car_iot}
+      DEVICE_API_KEY: ${DEVICE_API_KEY:-smart-car-secret-key-2026}
+      TEMP_NORMAL_THRESHOLD: ${TEMP_NORMAL_THRESHOLD:-30.0}
+      TEMP_HIGH_THRESHOLD: ${TEMP_HIGH_THRESHOLD:-35.0}
+      OFFLINE_TIMEOUT_SECONDS: ${OFFLINE_TIMEOUT_SECONDS:-20}
+      ENABLE_SIMULATION: ${ENABLE_SIMULATION:-true}
+      CORS_ORIGIN: "*"
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - smart_car_net
+
+  # ==============================================================================
+  # Service 3: React Production Frontend with Nginx Reverse Proxy
+  # Real-time automotive cockpit dashboard accessible on host port 8080
+  # ==============================================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: smart_car_frontend
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - smart_car_net
+
+# Persistent volumes
+volumes:
+  postgres_data:
+    driver: local
+
+# Internal communication network
+networks:
+  smart_car_net:
+    driver: bridge
