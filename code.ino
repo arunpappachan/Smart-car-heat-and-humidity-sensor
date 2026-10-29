@@ -11,11 +11,9 @@ const char* ssid     = "iQOO Neo9 Pro";
 const char* password = "12345678";
 
 // ==============================================================================
-// 2. RENDER CLOUD BACKEND CONFIGURATION
-// Replace YOUR_RENDER_APP with your actual Render service name:
-// Example: https://smart-car-backend.onrender.com/api/sensor-data
+// 2. RENDER CLOUD BACKEND CONFIGURATION (Live on Render)
 // ==============================================================================
-const char* serverURL   = "https://YOUR_BACKEND_APP.onrender.com/api/sensor-data";
+const char* serverURL   = "https://smart-car-backend.onrender.com/api/sensor-data";
 const char* deviceApiKey = "smart-car-secret-key-2026";
 const char* deviceId    = "CAR_001";
 

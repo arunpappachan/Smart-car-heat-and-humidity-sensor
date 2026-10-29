@@ -49,15 +49,13 @@
 // ------------------------------------------------------------------------------
 // Wi-Fi Network Credentials (Configure for your local Wi-Fi router / mobile hotspot)
 // ------------------------------------------------------------------------------
-const char* ssid     = "YOUR_WIFI_NAME";
-const char* password = "YOUR_WIFI_PASSWORD";
+const char* ssid     = "iQOO Neo9 Pro";
+const char* password = "12345678";
 
 // ------------------------------------------------------------------------------
-// Backend REST API Configuration
-// Replace YOUR_COMPUTER_IP with your host PC's IPv4 address (e.g., 192.168.1.15)
-// Find this using 'ipconfig' on Windows command prompt.
+// Backend REST API Configuration (Live on Render Cloud)
 // ------------------------------------------------------------------------------
-const char* serverURL = "http://YOUR_COMPUTER_IP:3000/api/sensor-data";
+const char* serverURL = "https://smart-car-backend.onrender.com/api/sensor-data";
 const char* deviceApiKey = "smart-car-secret-key-2026";
 const char* deviceId  = "CAR_001";
 
