@@ -1,12 +1,25 @@
 import axios from 'axios';
 import { io } from 'socket.io-client';
 
-// Determine API base URL (in Docker production served on port 8080 via Nginx proxy, in dev via Vite proxy, on Render via host)
+// Determine API base URL
+// If running on Render (e.g. smart-car-frontend.onrender.com), point to smart-car-backend.onrender.com
 let rawBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
+
+if (!rawBaseUrl && typeof window !== 'undefined') {
+  if (window.location.hostname.includes('onrender.com')) {
+    rawBaseUrl = window.location.origin.replace('smart-car-frontend', 'smart-car-backend');
+    if (!rawBaseUrl.includes('smart-car-backend')) {
+      rawBaseUrl = 'https://smart-car-backend.onrender.com';
+    }
+  }
+}
+
 if (rawBaseUrl && !rawBaseUrl.startsWith('http://') && !rawBaseUrl.startsWith('https://')) {
   rawBaseUrl = `https://${rawBaseUrl}`;
 }
+
 export const API_BASE_URL = rawBaseUrl;
+console.log('[API] Target Backend Base URL:', API_BASE_URL || '(relative)');
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -91,17 +104,19 @@ let socket = null;
 
 export const initSocketConnection = () => {
   if (!socket) {
-    // If running in development with separate ports, point directly to backend if needed
-    let socketUrl = import.meta.env.VITE_SOCKET_URL || rawBaseUrl || window.location.origin;
+    // If running on Render or remote, target backend URL
+    let socketUrl = API_BASE_URL || import.meta.env.VITE_SOCKET_URL || window.location.origin;
     if (socketUrl && !socketUrl.startsWith('http://') && !socketUrl.startsWith('https://') && !socketUrl.startsWith('ws://') && !socketUrl.startsWith('wss://')) {
       socketUrl = `https://${socketUrl}`;
     }
+
+    console.log('[Socket.IO] Connecting to WebSocket host:', socketUrl);
 
     socket = io(socketUrl, {
       path: '/socket.io',
       transports: ['websocket', 'polling'],
       reconnection: true,
-      reconnectionAttempts: 20,
+      reconnectionAttempts: 25,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
     });
