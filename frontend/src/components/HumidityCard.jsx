@@ -17,21 +17,21 @@ export default function HumidityCard({
 
   // Determine comfort category
   let comfortStatus = 'Optimal';
-  let comfortColor = 'text-cyan-400';
-  let comfortBg = 'bg-cyan-500/10 border-cyan-500/30';
+  let comfortColor = 'text-sky-700';
+  let comfortBg = 'bg-sky-50 border-sky-300';
 
   if (!isOnline) {
     comfortStatus = 'Offline';
-    comfortColor = 'text-slate-500';
-    comfortBg = 'bg-slate-900 border-slate-800';
+    comfortColor = 'text-slate-400';
+    comfortBg = 'bg-slate-100 border-slate-200';
   } else if (humVal < 30) {
     comfortStatus = 'Dry Air';
-    comfortColor = 'text-amber-400';
-    comfortBg = 'bg-amber-500/10 border-amber-500/30';
+    comfortColor = 'text-amber-700';
+    comfortBg = 'bg-amber-50 border-amber-300';
   } else if (humVal > 70) {
     comfortStatus = 'High Humidity';
-    comfortColor = 'text-blue-400';
-    comfortBg = 'bg-blue-500/10 border-blue-500/30';
+    comfortColor = 'text-blue-700';
+    comfortBg = 'bg-blue-50 border-blue-300';
   }
 
   // Circular gauge calculations (SVG circumference)
@@ -40,21 +40,18 @@ export default function HumidityCard({
   const strokeDashoffset = circumference - (Math.min(Math.max(humVal, 0), 100) / 100) * circumference;
 
   return (
-    <div className="glass-panel rounded-2xl p-6 transition-all duration-500 relative overflow-hidden">
-      {/* Subtle ambient cyan glow */}
-      <div className="absolute -top-12 -right-12 w-48 h-48 bg-cyan-600/10 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="glass-panel rounded-2xl p-6 transition-all duration-300 relative overflow-hidden bg-white/95 border-slate-200 shadow-sm">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2.5">
-          <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 shadow-sm">
-            <Droplets className="w-5 h-5 text-cyan-400" />
+          <div className="p-2.5 rounded-xl bg-sky-50 border border-sky-200 text-sky-600 shadow-2xs">
+            <Droplets className="w-5 h-5 text-sky-600" />
           </div>
           <div>
-            <h2 className="text-xs uppercase tracking-wider text-slate-400 font-semibold">
+            <h2 className="text-xs uppercase tracking-wider text-slate-500 font-bold">
               Cabin Humidity
             </h2>
-            <span className="text-[11px] font-mono text-slate-500">Relative Humidity (%RH)</span>
+            <span className="text-[11px] font-mono text-slate-400">Relative Humidity (%RH)</span>
           </div>
         </div>
 
@@ -68,18 +65,18 @@ export default function HumidityCard({
         {/* Left: Value & Description */}
         <div>
           <div className="flex items-baseline">
-            <span className="text-5xl sm:text-6xl font-black font-heading tracking-tight text-cyan-300 drop-shadow-sm">
+            <span className="text-5xl sm:text-6xl font-black font-heading tracking-tight text-slate-900">
               {isOnline ? humVal.toFixed(1) : '--.-'}
             </span>
             <span className="text-2xl sm:text-3xl font-bold ml-1.5 text-slate-400">%</span>
           </div>
-          <div className="flex items-center space-x-1.5 text-xs text-slate-400 mt-2">
-            <Waves className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Dew Point: <strong className="text-slate-200 font-mono">{isOnline ? `${dewPoint}°C` : '--'}</strong></span>
+          <div className="flex items-center space-x-1.5 text-xs text-slate-600 mt-2 font-medium">
+            <Waves className="w-3.5 h-3.5 text-sky-600" />
+            <span>Dew Point: <strong className="text-slate-800 font-mono">{isOnline ? `${dewPoint}°C` : '--'}</strong></span>
           </div>
-          <div className="flex items-center space-x-1.5 text-[11px] text-slate-500 mt-1">
-            <Wind className="w-3 h-3 text-cyan-500" />
-            <span>Comfort Target: 40% – 60% RH</span>
+          <div className="flex items-center space-x-1.5 text-[11px] text-slate-400 mt-1">
+            <Wind className="w-3 h-3 text-sky-500" />
+            <span>Optimal Range: 40% – 60% RH</span>
           </div>
         </div>
 
@@ -91,7 +88,7 @@ export default function HumidityCard({
               cx="45"
               cy="45"
               r={radius}
-              className="text-slate-800"
+              className="text-slate-100"
               strokeWidth="7"
               stroke="currentColor"
               fill="transparent"
@@ -101,7 +98,7 @@ export default function HumidityCard({
               cx="45"
               cy="45"
               r={radius}
-              className="text-cyan-400 transition-all duration-700 ease-out"
+              className="text-sky-500 transition-all duration-700 ease-out"
               strokeWidth="7"
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
@@ -111,8 +108,8 @@ export default function HumidityCard({
             />
           </svg>
           <div className="absolute flex flex-col items-center justify-center text-center">
-            <Droplets className="w-4 h-4 text-cyan-400 mb-0.5" />
-            <span className="text-xs font-mono font-bold text-slate-200">
+            <Droplets className="w-4 h-4 text-sky-600 mb-0.5" />
+            <span className="text-xs font-mono font-black text-slate-800">
               {isOnline ? `${Math.round(humVal)}%` : '--'}
             </span>
           </div>
@@ -120,22 +117,22 @@ export default function HumidityCard({
       </div>
 
       {/* Summary Footer */}
-      <div className="grid grid-cols-3 gap-2 mt-5 pt-4 border-t border-slate-800/80 text-center">
-        <div className="bg-slate-900/60 rounded-xl py-2 px-2 border border-slate-800/60">
-          <div className="text-[10px] text-slate-500 uppercase font-semibold">Min (24h)</div>
-          <div className="text-xs font-mono font-bold text-slate-300 mt-0.5">
+      <div className="grid grid-cols-3 gap-2 mt-5 pt-4 border-t border-slate-100 text-center">
+        <div className="bg-slate-50 rounded-xl py-2 px-2 border border-slate-200">
+          <div className="text-[10px] text-slate-500 uppercase font-bold">Min (24h)</div>
+          <div className="text-xs font-mono font-bold text-slate-800 mt-0.5">
             {minHum != null ? `${parseFloat(minHum).toFixed(1)}%` : '--'}
           </div>
         </div>
-        <div className="bg-slate-900/60 rounded-xl py-2 px-2 border border-slate-800/60">
-          <div className="text-[10px] text-slate-500 uppercase font-semibold">Avg (24h)</div>
-          <div className="text-xs font-mono font-bold text-cyan-300 mt-0.5">
+        <div className="bg-slate-50 rounded-xl py-2 px-2 border border-slate-200">
+          <div className="text-[10px] text-slate-500 uppercase font-bold">Avg (24h)</div>
+          <div className="text-xs font-mono font-bold text-sky-700 mt-0.5">
             {avgHum != null ? `${parseFloat(avgHum).toFixed(1)}%` : '--'}
           </div>
         </div>
-        <div className="bg-slate-900/60 rounded-xl py-2 px-2 border border-slate-800/60">
-          <div className="text-[10px] text-slate-500 uppercase font-semibold">Max (24h)</div>
-          <div className="text-xs font-mono font-bold text-blue-400 mt-0.5">
+        <div className="bg-slate-50 rounded-xl py-2 px-2 border border-slate-200">
+          <div className="text-[10px] text-slate-500 uppercase font-bold">Max (24h)</div>
+          <div className="text-xs font-mono font-bold text-blue-700 mt-0.5">
             {maxHum != null ? `${parseFloat(maxHum).toFixed(1)}%` : '--'}
           </div>
         </div>

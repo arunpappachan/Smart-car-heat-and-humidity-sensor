@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Header from '../components/Header';
 import StatusIndicator from '../components/StatusIndicator';
-import VehicleCabinVisualizer from '../components/VehicleCabinVisualizer';
 import TemperatureCard from '../components/TemperatureCard';
 import HumidityCard from '../components/HumidityCard';
 import LEDIndicator from '../components/LEDIndicator';
@@ -204,15 +203,6 @@ export default function Dashboard() {
           temperature={currentTemp}
           humidity={currentHum}
           isOnline={isOnline}
-        />
-
-        {/* High-Tech Automotive Vehicle Cabin Visualizer */}
-        <VehicleCabinVisualizer
-          temperature={currentTemp}
-          humidity={currentHum}
-          status={currentStatus}
-          isOnline={isOnline}
-          onOpenDiagnostics={() => setIsSimulationOpen(true)}
         />
 
         {/* Core Metric & Hardware Cards Grid */}

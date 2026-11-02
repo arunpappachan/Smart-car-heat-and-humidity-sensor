@@ -28,13 +28,13 @@ export default function HumidityChart({ data = [] }) {
     if (active && payload && payload.length) {
       const dataPoint = payload[0].payload;
       return (
-        <div className="bg-slate-900 border border-slate-700/80 p-3 rounded-xl shadow-2xl text-xs space-y-1">
-          <div className="font-mono text-slate-400">{dataPoint.time}</div>
-          <div className="text-sm font-bold text-cyan-300 flex items-center space-x-1.5">
+        <div className="bg-white border border-slate-200 p-3 rounded-xl shadow-lg text-xs space-y-1">
+          <div className="font-mono text-slate-500">{dataPoint.time}</div>
+          <div className="text-sm font-bold text-sky-700 flex items-center space-x-1.5">
             <span>Humidity:</span>
             <span>{dataPoint.humidity.toFixed(1)}%</span>
           </div>
-          <div className="text-[11px] text-slate-400">
+          <div className="text-[11px] text-slate-500">
             Cabin status: {dataPoint.humidity >= 40 && dataPoint.humidity <= 60 ? 'Optimal' : 'Unbalanced'}
           </div>
         </div>
@@ -44,45 +44,45 @@ export default function HumidityChart({ data = [] }) {
   };
 
   return (
-    <div className="glass-panel rounded-2xl p-6 transition-all duration-300">
+    <div className="glass-panel rounded-2xl p-6 transition-all duration-300 bg-white/95 border-slate-200 shadow-sm">
       {/* Chart Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2.5">
-          <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300">
-            <Droplets className="w-5 h-5 text-cyan-400" />
+          <div className="p-2.5 rounded-xl bg-sky-50 border border-sky-200 text-sky-600 shadow-2xs">
+            <Droplets className="w-5 h-5 text-sky-600" />
           </div>
           <div>
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">
               Humidity Trend
             </h2>
-            <p className="text-xs text-slate-400">Cabin moisture level over time</p>
+            <p className="text-xs text-slate-500">Cabin moisture level over time</p>
           </div>
         </div>
-        <div className="text-xs text-slate-400 font-mono">
-          Ideal: 40% – 60%
+        <div className="text-xs text-slate-500 font-mono font-bold bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-lg">
+          Target: 40% – 60%
         </div>
       </div>
 
       {/* Recharts Area Chart */}
       <div className="h-64 w-full">
         {chartData.length === 0 ? (
-          <div className="h-full flex items-center justify-center text-slate-500 text-xs">
+          <div className="h-full flex items-center justify-center text-slate-400 text-xs">
             No humidity readings recorded yet.
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
-                <linearGradient id="humGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.6} />
-                  <stop offset="95%" stopColor="#06b6d4" stopOpacity={0.02} />
+                <linearGradient id="humGradientLight" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#0284c7" stopOpacity={0.35} />
+                  <stop offset="95%" stopColor="#0284c7" stopOpacity={0.02} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" opacity={0.6} />
-              <XAxis dataKey="time" stroke="#64748b" tick={{ fontSize: 10 }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.8} />
+              <XAxis dataKey="time" stroke="#64748b" tick={{ fontSize: 10, fill: '#64748b' }} />
               <YAxis
                 stroke="#64748b"
-                tick={{ fontSize: 10 }}
+                tick={{ fontSize: 10, fill: '#64748b' }}
                 domain={[20, 90]}
                 unit="%"
               />
@@ -91,21 +91,21 @@ export default function HumidityChart({ data = [] }) {
                 y={60}
                 stroke="#0284c7"
                 strokeDasharray="3 3"
-                label={{ value: '60% Upper Comfort', fill: '#38bdf8', fontSize: 10, position: 'insideTopRight' }}
+                label={{ value: '60% Upper Comfort', fill: '#0369a1', fontSize: 10, position: 'insideTopRight' }}
               />
               <ReferenceLine
                 y={40}
                 stroke="#0284c7"
                 strokeDasharray="3 3"
-                label={{ value: '40% Lower Comfort', fill: '#38bdf8', fontSize: 10, position: 'insideBottomRight' }}
+                label={{ value: '40% Lower Comfort', fill: '#0369a1', fontSize: 10, position: 'insideBottomRight' }}
               />
               <Area
                 type="monotone"
                 dataKey="humidity"
-                stroke="#22d3ee"
+                stroke="#0284c7"
                 strokeWidth={2.5}
                 fillOpacity={1}
-                fill="url(#humGradient)"
+                fill="url(#humGradientLight)"
                 isAnimationActive={false}
               />
             </AreaChart>

@@ -43,34 +43,34 @@ export default function SensorHistory({
   };
 
   return (
-    <div className="glass-panel rounded-2xl p-6 transition-all duration-300">
+    <div className="glass-panel rounded-2xl p-6 transition-all duration-300 bg-white/95 border-slate-200 shadow-sm">
       {/* Header with Title and Filters */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div className="flex items-center space-x-2.5">
-          <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300">
-            <Database className="w-5 h-5 text-cyan-400" />
+          <div className="p-2.5 rounded-xl bg-sky-50 border border-sky-200 text-sky-600 shadow-2xs">
+            <Database className="w-5 h-5 text-sky-600" />
           </div>
           <div>
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900">
               Telemetry Log Archive
             </h2>
-            <p className="text-xs text-slate-400">PostgreSQL environmental telemetry records ({total} events)</p>
+            <p className="text-xs text-slate-500">PostgreSQL environmental telemetry records ({total} events)</p>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           {/* Status Filter */}
-          <div className="flex items-center space-x-1.5 bg-slate-900 border border-slate-800 rounded-xl px-2.5 py-1 text-xs">
-            <Filter className="w-3.5 h-3.5 text-slate-400" />
+          <div className="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1 text-xs text-slate-700">
+            <Filter className="w-3.5 h-3.5 text-slate-500" />
             <select
               value={statusFilter}
               onChange={(e) => onStatusFilterChange(e.target.value)}
-              className="bg-transparent text-slate-200 outline-none cursor-pointer font-medium"
+              className="bg-transparent text-slate-800 outline-none cursor-pointer font-semibold"
             >
-              <option value="ALL" className="bg-slate-900">All Statuses</option>
-              <option value="NORMAL" className="bg-slate-900">Normal (&lt;30°C)</option>
-              <option value="WARNING" className="bg-slate-900">Caution (30-35°C)</option>
-              <option value="HIGH" className="bg-slate-900">Alert (&ge;35°C)</option>
+              <option value="ALL">All Statuses</option>
+              <option value="NORMAL">Normal (&lt;30°C)</option>
+              <option value="WARNING">Caution (30-35°C)</option>
+              <option value="HIGH">Alert (&ge;35°C)</option>
             </select>
           </div>
 
@@ -78,18 +78,18 @@ export default function SensorHistory({
           <button
             onClick={handleExportCSV}
             title="Export Telemetry Log to CSV"
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-colors"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 hover:text-slate-900 transition-colors shadow-2xs"
           >
-            <Download className="w-3.5 h-3.5 text-cyan-400" />
+            <Download className="w-3.5 h-3.5 text-sky-600" />
             <span>Export CSV</span>
           </button>
         </div>
       </div>
 
       {/* Telemetry Log Table */}
-      <div className="overflow-x-auto rounded-xl border border-slate-800/80">
+      <div className="overflow-x-auto rounded-xl border border-slate-200">
         <table className="w-full text-left text-xs">
-          <thead className="bg-slate-900/80 border-b border-slate-800 uppercase tracking-wider font-semibold text-slate-400">
+          <thead className="bg-slate-50 border-b border-slate-200 uppercase tracking-wider font-bold text-slate-600">
             <tr>
               <th className="py-3 px-4">Date</th>
               <th className="py-3 px-4">Time</th>
@@ -99,10 +99,10 @@ export default function SensorHistory({
               <th className="py-3 px-4 text-right">Channel</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/50 font-mono">
+          <tbody className="divide-y divide-slate-100 font-mono">
             {readings.length === 0 ? (
               <tr>
-                <td colSpan="6" className="py-8 text-center text-slate-500 font-sans text-xs">
+                <td colSpan="6" className="py-8 text-center text-slate-400 font-sans text-xs">
                   No telemetry logged matching current criteria.
                 </td>
               </tr>
@@ -111,37 +111,37 @@ export default function SensorHistory({
                 const dateObj = new Date(reading.recorded_at);
                 const tempNum = parseFloat(reading.temperature);
                 return (
-                  <tr key={reading.id} className="hover:bg-slate-800/30 transition-colors">
-                    <td className="py-2.5 px-4 text-slate-300">
+                  <tr key={reading.id} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="py-2.5 px-4 text-slate-700">
                       {dateObj.toLocaleDateString()}
                     </td>
-                    <td className="py-2.5 px-4 text-slate-400">
+                    <td className="py-2.5 px-4 text-slate-500">
                       {dateObj.toLocaleTimeString()}
                     </td>
-                    <td className="py-2.5 px-4 font-bold text-white">
+                    <td className="py-2.5 px-4 font-bold">
                       <span
                         className={
                           tempNum >= 35
-                            ? 'text-red-400'
+                            ? 'text-rose-600 font-extrabold'
                             : tempNum >= 30
-                            ? 'text-amber-400'
-                            : 'text-emerald-400'
+                            ? 'text-amber-600 font-extrabold'
+                            : 'text-emerald-700 font-extrabold'
                         }
                       >
                         {tempNum.toFixed(1)}°C
                       </span>
                     </td>
-                    <td className="py-2.5 px-4 text-cyan-300 font-bold">
+                    <td className="py-2.5 px-4 text-sky-700 font-bold">
                       {parseFloat(reading.humidity).toFixed(1)}%
                     </td>
                     <td className="py-2.5 px-4 font-sans">
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
                           reading.status === 'HIGH'
-                            ? 'bg-red-500/20 text-red-300 border border-red-500/40'
+                            ? 'bg-rose-50 text-rose-700 border-rose-300'
                             : reading.status === 'WARNING'
-                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                            : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                            ? 'bg-amber-50 text-amber-700 border-amber-300'
+                            : 'bg-emerald-50 text-emerald-700 border-emerald-300'
                         }`}
                       >
                         {reading.status}
@@ -149,11 +149,11 @@ export default function SensorHistory({
                     </td>
                     <td className="py-2.5 px-4 text-right font-sans">
                       {reading.is_simulated ? (
-                        <span className="text-[10px] text-sky-400 font-semibold bg-sky-500/10 border border-sky-500/30 px-2 py-0.5 rounded">
+                        <span className="text-[10px] text-sky-700 font-bold bg-sky-50 border border-sky-200 px-2 py-0.5 rounded">
                           DIAGNOSTIC
                         </span>
                       ) : (
-                        <span className="text-[10px] text-cyan-400 font-semibold bg-cyan-500/10 border border-cyan-500/30 px-2 py-0.5 rounded">
+                        <span className="text-[10px] text-teal-700 font-bold bg-teal-50 border border-teal-200 px-2 py-0.5 rounded">
                           ESP32 PROBE
                         </span>
                       )}
@@ -167,26 +167,26 @@ export default function SensorHistory({
       </div>
 
       {/* Pagination Controls */}
-      <div className="flex items-center justify-between mt-4 text-xs text-slate-400 font-medium">
+      <div className="flex items-center justify-between mt-4 text-xs text-slate-500 font-medium">
         <div>
-          Showing page <span className="font-bold text-white">{page}</span> of{' '}
-          <span className="font-bold text-white">{totalPages}</span>
+          Showing page <span className="font-bold text-slate-900">{page}</span> of{' '}
+          <span className="font-bold text-slate-900">{totalPages}</span>
         </div>
 
         <div className="flex items-center space-x-2">
           <button
             onClick={() => onPageChange(page - 1)}
             disabled={page <= 1}
-            className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            className="p-1.5 rounded-lg bg-slate-50 border border-slate-200 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-2xs"
           >
-            <ChevronLeft className="w-4 h-4 text-slate-300" />
+            <ChevronLeft className="w-4 h-4 text-slate-600" />
           </button>
           <button
             onClick={() => onPageChange(page + 1)}
             disabled={page >= totalPages}
-            className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            className="p-1.5 rounded-lg bg-slate-50 border border-slate-200 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-2xs"
           >
-            <ChevronRight className="w-4 h-4 text-slate-300" />
+            <ChevronRight className="w-4 h-4 text-slate-600" />
           </button>
         </div>
       </div>
