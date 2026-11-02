@@ -113,7 +113,7 @@ if (fs.existsSync(frontendDist)) {
   // Fallback API metadata
   app.get('/', (req, res) => {
     res.json({
-      project: 'Sentinel Car Heat and Humidity Monitoring System',
+      project: 'Smart Car Humidity Sensor',
       description: 'Connected Vehicle Telemetry & Ingestion Backend API',
       version: '1.0.0',
       status: 'ONLINE',

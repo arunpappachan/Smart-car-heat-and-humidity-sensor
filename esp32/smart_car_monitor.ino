@@ -408,7 +408,7 @@ void handleRootWebPage() {
   html += "<div><strong>Uptime:</strong> " + String(millis() / 1000) + " seconds</div>";
   html += "</div>";
 
-  html += "<div class='disclaimer'>Sentinel Car IoT Telemetry Node. Synchronized with Cloud Ingestion Stream.</div>";
+  html += "<div class='disclaimer'>Smart Car Humidity Sensor Node. Synchronized with Cloud Ingestion Stream.</div>";
   html += "</div></body></html>";
 
   server.send(200, "text/html", html);

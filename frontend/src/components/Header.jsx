@@ -55,14 +55,11 @@ export default function Header({
           <div>
             <div className="flex items-center space-x-2">
               <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 font-heading">
-                SENTINEL CAR IoT
+                Smart Car Humidity Sensor
               </h1>
-              <span className="px-2 py-0.5 text-[10px] font-extrabold tracking-widest bg-sky-100 text-sky-700 border border-sky-200 rounded uppercase font-mono">
-                COCKPIT TELEMETRY
-              </span>
             </div>
             <p className="text-xs sm:text-sm text-slate-500 font-medium">
-              Real-Time Automotive Cabin Heat & Moisture Sentinel
+              Real-Time Cabin Temperature & Humidity Monitoring
             </p>
           </div>
         </div>
