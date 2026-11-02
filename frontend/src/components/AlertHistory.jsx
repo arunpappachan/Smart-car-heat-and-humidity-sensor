@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertCircle, AlertOctagon, AlertTriangle, CheckCircle } from 'lucide-react';
+import { AlertCircle, AlertOctagon, AlertTriangle, CheckCircle, BellRing } from 'lucide-react';
 
 export default function AlertHistory({ alerts = [] }) {
   return (
@@ -7,26 +7,27 @@ export default function AlertHistory({ alerts = [] }) {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2.5">
-          <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300">
-            <AlertCircle className="w-5 h-5 text-red-400" />
+          <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 shadow-sm">
+            <BellRing className="w-5 h-5 text-red-400" />
           </div>
           <div>
             <h2 className="text-sm font-bold uppercase tracking-wider text-white">
-              Warning & Alert History
+              Incident & Threshold Log
             </h2>
-            <p className="text-xs text-slate-400">Chronological log of threshold transitions</p>
+            <p className="text-xs text-slate-400">Automated cabin thermal transition history</p>
           </div>
         </div>
-        <span className="text-xs px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 font-semibold">
-          {alerts.length} Events Logged
+        <span className="text-xs px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 font-mono font-semibold">
+          {alerts.length} Incidents
         </span>
       </div>
 
       {/* List of Alerts */}
       <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
         {alerts.length === 0 ? (
-          <div className="text-center py-8 text-slate-500 text-xs">
-            No temperature warning incidents recorded. Cabin operating normally.
+          <div className="text-center py-10 text-slate-500 text-xs flex flex-col items-center justify-center space-y-2">
+            <CheckCircle className="w-8 h-8 text-emerald-500/40" />
+            <span>No thermal warning incidents recorded. Cabin operating in nominal range.</span>
           </div>
         ) : (
           alerts.map((alert) => {
@@ -39,9 +40,9 @@ export default function AlertHistory({ alerts = [] }) {
                 key={alert.id}
                 className={`p-3.5 rounded-xl border transition-all ${
                   isHigh
-                    ? 'bg-red-950/20 border-red-500/40'
+                    ? 'bg-red-950/20 border-red-500/40 shadow-glow-red/10'
                     : isWarning
-                    ? 'bg-amber-950/20 border-amber-500/30'
+                    ? 'bg-amber-950/20 border-amber-500/30 shadow-glow-yellow/10'
                     : 'bg-emerald-950/20 border-emerald-500/30'
                 }`}
               >
@@ -56,12 +57,12 @@ export default function AlertHistory({ alerts = [] }) {
                         isHigh ? 'text-red-400' : isWarning ? 'text-amber-300' : 'text-emerald-400'
                       }`}
                     >
-                      {alert.alert_type} ALERT
+                      {alert.alert_type} THRESHOLD
                     </span>
                   </div>
 
                   <span className="text-[11px] font-mono text-slate-400">
-                    {dateObj.toLocaleDateString()} {dateObj.toLocaleTimeString()}
+                    {dateObj.toLocaleDateString()} {dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                   </span>
                 </div>
 
@@ -79,7 +80,7 @@ export default function AlertHistory({ alerts = [] }) {
                     <span className="font-bold text-cyan-300">{parseFloat(alert.humidity).toFixed(1)}%</span>
                   </div>
                   <div>
-                    Device: <span className="font-bold text-slate-200">{alert.device_id}</span>
+                    Zone: <span className="font-bold text-slate-200">{alert.device_id}</span>
                   </div>
                 </div>
               </div>

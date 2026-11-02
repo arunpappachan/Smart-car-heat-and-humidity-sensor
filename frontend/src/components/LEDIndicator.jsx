@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cpu } from 'lucide-react';
+import { Cpu, Zap } from 'lucide-react';
 
 export default function LEDIndicator({
   status = 'NORMAL',
@@ -14,24 +14,25 @@ export default function LEDIndicator({
   const isGreenActive = isOnline && !isRedActive && !isYellowActive;
 
   return (
-    <div className="glass-panel rounded-2xl p-6 transition-all duration-300">
+    <div className="glass-panel rounded-2xl p-6 transition-all duration-500">
       {/* Title */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2.5">
-          <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300">
+          <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 shadow-sm">
             <Cpu className="w-5 h-5 text-cyan-400" />
           </div>
           <div>
             <h2 className="text-xs uppercase tracking-wider text-slate-400 font-semibold">
-              Hardware LED Indicators
+              Hardware LED Matrix
             </h2>
-            <span className="text-[11px] text-slate-500">
-              ESP32 GPIO 26 (Red), 25 (Yellow), 27 (Green)
+            <span className="text-[11px] font-mono text-slate-500">
+              ESP32 GPIO 26 / 25 / 27 Logic
             </span>
           </div>
         </div>
-        <div className="text-[11px] font-mono text-slate-500">
-          {isOnline ? 'SYNCHRONIZED' : 'OFFLINE'}
+        <div className="flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-[10px] font-mono text-cyan-400">
+          <Zap className="w-3 h-3 text-cyan-400" />
+          <span>{isOnline ? 'HARDWARE SYNC' : 'OFFLINE'}</span>
         </div>
       </div>
 
@@ -39,20 +40,20 @@ export default function LEDIndicator({
       <div className="grid grid-cols-3 gap-3 sm:gap-4 mt-6">
         {/* GREEN LED */}
         <div
-          className={`rounded-xl p-4 text-center transition-all duration-300 border ${
+          className={`rounded-xl p-4 text-center transition-all duration-500 border ${
             isGreenActive
-              ? 'bg-emerald-950/40 border-emerald-500/50 shadow-glow-green/30'
-              : 'bg-slate-900/50 border-slate-800/80 opacity-60'
+              ? 'bg-emerald-950/40 border-emerald-500/60 shadow-glow-green/30'
+              : 'bg-slate-900/40 border-slate-800/80 opacity-55'
           }`}
         >
           {/* Hardware LED Bulb */}
           <div className="flex justify-center mb-3">
-            <div className="w-12 h-12 rounded-full led-housing flex items-center justify-center p-1.5">
+            <div className="w-13 h-13 rounded-full led-housing flex items-center justify-center p-1.5">
               <div
                 className={`w-full h-full rounded-full led-bulb transition-all duration-300 ${
                   isGreenActive
-                    ? 'bg-emerald-400 shadow-[0_0_22px_#10b981,0_0_35px_rgba(16,185,129,0.7)] animate-pulse'
-                    : 'bg-emerald-950 border border-emerald-900/40 opacity-40'
+                    ? 'bg-emerald-400 shadow-[0_0_24px_#10b981,0_0_40px_rgba(16,185,129,0.8)] animate-pulse'
+                    : 'bg-emerald-950/70 border border-emerald-900/40 opacity-30'
                 }`}
               />
             </div>
@@ -60,33 +61,33 @@ export default function LEDIndicator({
           <div className="font-bold text-xs uppercase tracking-wider text-emerald-400">
             Green LED
           </div>
-          <div className="text-[10px] text-slate-400 mt-0.5">GPIO 27</div>
-          <div className="text-[10px] text-slate-500 mt-1 font-mono">&lt; 30.0°C (Normal)</div>
+          <div className="text-[10px] font-mono text-slate-400 mt-0.5">GPIO 27</div>
+          <div className="text-[10px] text-slate-500 mt-1 font-mono">&lt; 30.0°C Safe</div>
           <div
-            className={`mt-2 text-[10px] font-bold py-0.5 px-2 rounded-full inline-block ${
-              isGreenActive ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-500'
+            className={`mt-2.5 text-[10px] font-bold py-0.5 px-2 rounded-full inline-block font-mono ${
+              isGreenActive ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40' : 'bg-slate-800/80 text-slate-500'
             }`}
           >
-            {isGreenActive ? 'ACTIVE (ON)' : 'STANDBY'}
+            {isGreenActive ? '3.3V HIGH' : '0.0V LOW'}
           </div>
         </div>
 
         {/* YELLOW LED */}
         <div
-          className={`rounded-xl p-4 text-center transition-all duration-300 border ${
+          className={`rounded-xl p-4 text-center transition-all duration-500 border ${
             isYellowActive
-              ? 'bg-amber-950/40 border-amber-500/50 shadow-glow-yellow/30'
-              : 'bg-slate-900/50 border-slate-800/80 opacity-60'
+              ? 'bg-amber-950/40 border-amber-500/60 shadow-glow-yellow/30'
+              : 'bg-slate-900/40 border-slate-800/80 opacity-55'
           }`}
         >
           {/* Hardware LED Bulb */}
           <div className="flex justify-center mb-3">
-            <div className="w-12 h-12 rounded-full led-housing flex items-center justify-center p-1.5">
+            <div className="w-13 h-13 rounded-full led-housing flex items-center justify-center p-1.5">
               <div
                 className={`w-full h-full rounded-full led-bulb transition-all duration-300 ${
                   isYellowActive
-                    ? 'bg-amber-400 shadow-[0_0_22px_#f59e0b,0_0_35px_rgba(245,158,11,0.7)] animate-pulse'
-                    : 'bg-amber-950 border border-amber-900/40 opacity-40'
+                    ? 'bg-amber-400 shadow-[0_0_24px_#f59e0b,0_0_40px_rgba(245,158,11,0.8)] animate-pulse'
+                    : 'bg-amber-950/70 border border-amber-900/40 opacity-30'
                 }`}
               />
             </div>
@@ -94,33 +95,33 @@ export default function LEDIndicator({
           <div className="font-bold text-xs uppercase tracking-wider text-amber-400">
             Yellow LED
           </div>
-          <div className="text-[10px] text-slate-400 mt-0.5">GPIO 25</div>
-          <div className="text-[10px] text-slate-500 mt-1 font-mono">30 - 35°C (Caution)</div>
+          <div className="text-[10px] font-mono text-slate-400 mt-0.5">GPIO 25</div>
+          <div className="text-[10px] text-slate-500 mt-1 font-mono">30 - 35°C Warn</div>
           <div
-            className={`mt-2 text-[10px] font-bold py-0.5 px-2 rounded-full inline-block ${
-              isYellowActive ? 'bg-amber-500/20 text-amber-300' : 'bg-slate-800 text-slate-500'
+            className={`mt-2.5 text-[10px] font-bold py-0.5 px-2 rounded-full inline-block font-mono ${
+              isYellowActive ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40' : 'bg-slate-800/80 text-slate-500'
             }`}
           >
-            {isYellowActive ? 'ACTIVE (ON)' : 'STANDBY'}
+            {isYellowActive ? '3.3V HIGH' : '0.0V LOW'}
           </div>
         </div>
 
         {/* RED LED */}
         <div
-          className={`rounded-xl p-4 text-center transition-all duration-300 border ${
+          className={`rounded-xl p-4 text-center transition-all duration-500 border ${
             isRedActive
-              ? 'bg-red-950/40 border-red-500/50 shadow-glow-red/40'
-              : 'bg-slate-900/50 border-slate-800/80 opacity-60'
+              ? 'bg-red-950/40 border-red-500/60 shadow-glow-red/40'
+              : 'bg-slate-900/40 border-slate-800/80 opacity-55'
           }`}
         >
           {/* Hardware LED Bulb */}
           <div className="flex justify-center mb-3">
-            <div className="w-12 h-12 rounded-full led-housing flex items-center justify-center p-1.5">
+            <div className="w-13 h-13 rounded-full led-housing flex items-center justify-center p-1.5">
               <div
                 className={`w-full h-full rounded-full led-bulb transition-all duration-300 ${
                   isRedActive
-                    ? 'bg-red-500 shadow-[0_0_25px_#ef4444,0_0_40px_rgba(239,68,68,0.8)] animate-pulse'
-                    : 'bg-red-950 border border-red-900/40 opacity-40'
+                    ? 'bg-red-500 shadow-[0_0_28px_#ef4444,0_0_45px_rgba(239,68,68,0.9)] animate-pulse'
+                    : 'bg-red-950/70 border border-red-900/40 opacity-30'
                 }`}
               />
             </div>
@@ -128,14 +129,14 @@ export default function LEDIndicator({
           <div className="font-bold text-xs uppercase tracking-wider text-red-400">
             Red LED
           </div>
-          <div className="text-[10px] text-slate-400 mt-0.5">GPIO 26</div>
-          <div className="text-[10px] text-slate-500 mt-1 font-mono">&ge; 35.0°C (Alert)</div>
+          <div className="text-[10px] font-mono text-slate-400 mt-0.5">GPIO 26</div>
+          <div className="text-[10px] text-slate-500 mt-1 font-mono">&ge; 35.0°C Alert</div>
           <div
-            className={`mt-2 text-[10px] font-bold py-0.5 px-2 rounded-full inline-block ${
-              isRedActive ? 'bg-red-500/20 text-red-300' : 'bg-slate-800 text-slate-500'
+            className={`mt-2.5 text-[10px] font-bold py-0.5 px-2 rounded-full inline-block font-mono ${
+              isRedActive ? 'bg-red-500/25 text-red-300 border border-red-500/40' : 'bg-slate-800/80 text-slate-500'
             }`}
           >
-            {isRedActive ? 'ACTIVE (ON)' : 'STANDBY'}
+            {isRedActive ? '3.3V HIGH' : '0.0V LOW'}
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Database, Filter, ChevronLeft, ChevronRight, Download } from 'lucide-react';
 
 export default function SensorHistory({
@@ -14,7 +14,7 @@ export default function SensorHistory({
 
   const handleExportCSV = () => {
     if (!readings || readings.length === 0) return;
-    const headers = ['ID', 'Device ID', 'Date', 'Time', 'Temperature (°C)', 'Humidity (%)', 'Status', 'Simulated'];
+    const headers = ['ID', 'Device ID', 'Date', 'Time', 'Temperature (°C)', 'Humidity (%)', 'Status', 'Telemetry Channel'];
     const rows = readings.map((r) => {
       const d = new Date(r.recorded_at);
       return [
@@ -25,7 +25,7 @@ export default function SensorHistory({
         r.temperature,
         r.humidity,
         r.status,
-        r.is_simulated ? 'YES' : 'NO',
+        r.is_simulated ? 'DIAGNOSTIC' : 'HARDWARE PROBE',
       ];
     });
 
@@ -52,9 +52,9 @@ export default function SensorHistory({
           </div>
           <div>
             <h2 className="text-sm font-bold uppercase tracking-wider text-white">
-              Sensor Reading History
+              Telemetry Log Archive
             </h2>
-            <p className="text-xs text-slate-400">PostgreSQL stored sensor logs ({total} total records)</p>
+            <p className="text-xs text-slate-400">PostgreSQL environmental telemetry records ({total} events)</p>
           </div>
         </div>
 
@@ -69,15 +69,15 @@ export default function SensorHistory({
             >
               <option value="ALL" className="bg-slate-900">All Statuses</option>
               <option value="NORMAL" className="bg-slate-900">Normal (&lt;30°C)</option>
-              <option value="WARNING" className="bg-slate-900">Warning (30-35°C)</option>
-              <option value="HIGH" className="bg-slate-900">High (&ge;35°C)</option>
+              <option value="WARNING" className="bg-slate-900">Caution (30-35°C)</option>
+              <option value="HIGH" className="bg-slate-900">Alert (&ge;35°C)</option>
             </select>
           </div>
 
           {/* CSV Export */}
           <button
             onClick={handleExportCSV}
-            title="Download CSV"
+            title="Export Telemetry Log to CSV"
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-slate-300 hover:text-white transition-colors"
           >
             <Download className="w-3.5 h-3.5 text-cyan-400" />
@@ -95,8 +95,8 @@ export default function SensorHistory({
               <th className="py-3 px-4">Time</th>
               <th className="py-3 px-4">Temperature</th>
               <th className="py-3 px-4">Humidity</th>
-              <th className="py-3 px-4">Warning Status</th>
-              <th className="py-3 px-4 text-right">Source</th>
+              <th className="py-3 px-4">Thermal Status</th>
+              <th className="py-3 px-4 text-right">Channel</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800/50 font-mono">
@@ -149,12 +149,12 @@ export default function SensorHistory({
                     </td>
                     <td className="py-2.5 px-4 text-right font-sans">
                       {reading.is_simulated ? (
-                        <span className="text-[10px] text-purple-400 font-medium bg-purple-500/10 px-1.5 py-0.5 rounded">
-                          SIMULATOR
+                        <span className="text-[10px] text-sky-400 font-semibold bg-sky-500/10 border border-sky-500/30 px-2 py-0.5 rounded">
+                          DIAGNOSTIC
                         </span>
                       ) : (
-                        <span className="text-[10px] text-cyan-400 font-medium bg-cyan-500/10 px-1.5 py-0.5 rounded">
-                          ESP32 LIVE
+                        <span className="text-[10px] text-cyan-400 font-semibold bg-cyan-500/10 border border-cyan-500/30 px-2 py-0.5 rounded">
+                          ESP32 PROBE
                         </span>
                       )}
                     </td>

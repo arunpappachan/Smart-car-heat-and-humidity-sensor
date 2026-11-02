@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Header from '../components/Header';
 import StatusIndicator from '../components/StatusIndicator';
+import VehicleCabinVisualizer from '../components/VehicleCabinVisualizer';
 import TemperatureCard from '../components/TemperatureCard';
 import HumidityCard from '../components/HumidityCard';
 import LEDIndicator from '../components/LEDIndicator';
@@ -9,6 +10,7 @@ import HumidityChart from '../components/HumidityChart';
 import SensorHistory from '../components/SensorHistory';
 import AlertHistory from '../components/AlertHistory';
 import SimulationModal from '../components/SimulationModal';
+import { soundAlertService } from '../services/soundAlerts';
 import {
   getLatestReading,
   getSensorHistory,
@@ -46,8 +48,12 @@ export default function Dashboard() {
       ]);
 
       if (latestResult.status === 'fulfilled' && latestResult.value && latestResult.value.success) {
-        setLatest(latestResult.value.latest);
+        const item = latestResult.value.latest;
+        setLatest(item);
         setIsOnline(latestResult.value.is_online);
+        if (item) {
+          soundAlertService.handleThermalState(item.status, parseFloat(item.temperature));
+        }
       }
 
       if (statsResult.status === 'fulfilled' && statsResult.value && statsResult.value.success) {
@@ -116,6 +122,9 @@ export default function Dashboard() {
       setLatest(data);
       setIsOnline(true);
 
+      const newTemp = parseFloat(data.temperature);
+      soundAlertService.handleThermalState(data.status, newTemp);
+
       // Append to charts state
       setChartReadings((prev) => [data, ...prev.slice(0, 150)]);
 
@@ -126,7 +135,6 @@ export default function Dashboard() {
       // Dynamically update session stats
       setStats((prev) => {
         if (!prev) return null;
-        const newTemp = parseFloat(data.temperature);
         const newHum = parseFloat(data.humidity);
         return {
           ...prev,
@@ -174,13 +182,12 @@ export default function Dashboard() {
   const currentStatus = latest ? latest.status : 'NORMAL';
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
-      {/* Dashboard Top Header */}
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
+      {/* Dashboard Top Cockpit Header */}
       <Header
         deviceId={deviceId}
         isOnline={isOnline}
         lastUpdated={latest ? latest.recorded_at : null}
-        isSimulated={latest ? latest.is_simulated : false}
         onOpenSimulation={() => setIsSimulationOpen(true)}
         onRefresh={() => {
           fetchTelemetry();
@@ -191,11 +198,21 @@ export default function Dashboard() {
       />
 
       <main className="space-y-6">
-        {/* Safety Condition Banner */}
+        {/* Safety Condition Overview Banner */}
         <StatusIndicator
           status={currentStatus}
           temperature={currentTemp}
+          humidity={currentHum}
           isOnline={isOnline}
+        />
+
+        {/* High-Tech Automotive Vehicle Cabin Visualizer */}
+        <VehicleCabinVisualizer
+          temperature={currentTemp}
+          humidity={currentHum}
+          status={currentStatus}
+          isOnline={isOnline}
+          onOpenDiagnostics={() => setIsSimulationOpen(true)}
         />
 
         {/* Core Metric & Hardware Cards Grid */}
@@ -211,6 +228,7 @@ export default function Dashboard() {
 
           <HumidityCard
             humidity={currentHum}
+            temperature={currentTemp}
             isOnline={isOnline}
             minHum={stats?.min_humidity}
             maxHum={stats?.max_humidity}
@@ -261,7 +279,7 @@ export default function Dashboard() {
         </div>
       </main>
 
-      {/* Simulator Modal Drawer */}
+      {/* Diagnostics Suite Modal Drawer */}
       <SimulationModal
         isOpen={isSimulationOpen}
         onClose={() => setIsSimulationOpen(false)}
