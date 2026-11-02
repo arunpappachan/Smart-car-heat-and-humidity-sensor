@@ -16,7 +16,7 @@ When a passenger vehicle is parked outdoors in direct sunlight, the interior cab
 
 This project delivers a **full-stack IoT solution** using an **ESP32 microcontroller** paired with a **DHT22 digital sensor** to continuously track internal temperature and humidity. Readings are communicated over Wi-Fi to a containerized Node.js backend, stored in PostgreSQL, and streamed in real time to a high-aesthetic automotive dashboard via Socket.IO.
 
-> **Academic Prototype Notice:** This system is an educational monitoring prototype designed for MCA coursework. It is not an automotive-certified life-safety system and does not make medical safety determinations.
+> **Sentinel Cabin Safety Architecture:** Built for high-frequency cabin telemetry, solar heat soak detection, multi-tier LED signaling, and automated occupant safety threshold alerts.
 
 ---
 

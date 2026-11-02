@@ -99,23 +99,35 @@ app.post('/api/simulation/start', simulationController.startSimulation);
 app.post('/api/simulation/stop', simulationController.stopSimulation);
 app.post('/api/simulation/scenario', simulationController.setScenario);
 
-// Root informational endpoint
-app.get('/', (req, res) => {
-  res.json({
-    project: 'Smart Car Heat and Humidity Monitoring System Using ESP32',
-    description: 'MCA IoT Mini Project Backend API',
-    version: '1.0.0',
-    endpoints: {
-      health: '/api/health',
-      sensor_data: '/api/sensor-data',
-      latest_data: '/api/sensor-data/latest',
-      stats: '/api/sensor-data/stats',
-      alerts: '/api/alerts',
-      simulation: '/api/simulation/status',
-    },
-    documentation: 'See README.md for full specs',
+const path = require('path');
+const fs = require('fs');
+
+// Serve static frontend assets if built
+const frontendDist = path.join(__dirname, '../../frontend/dist');
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(frontendDist, 'index.html'));
   });
-});
+} else {
+  // Fallback API metadata
+  app.get('/', (req, res) => {
+    res.json({
+      project: 'Sentinel Car Heat and Humidity Monitoring System',
+      description: 'Connected Vehicle Telemetry & Ingestion Backend API',
+      version: '1.0.0',
+      status: 'ONLINE',
+      endpoints: {
+        health: '/api/health',
+        sensor_data: '/api/sensor-data',
+        latest_data: '/api/sensor-data/latest',
+        stats: '/api/sensor-data/stats',
+        alerts: '/api/alerts',
+        simulation: '/api/simulation/status',
+      },
+    });
+  });
+}
 
 // 404 Route Handler
 app.use((req, res) => {

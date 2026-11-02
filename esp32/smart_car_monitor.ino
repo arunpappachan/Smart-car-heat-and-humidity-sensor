@@ -24,9 +24,8 @@
  * - 30.0°C to < 35.0°C   : WARNING -> YELLOW LED ON (Green OFF, Red OFF)
  * - 35.0°C and above     : HIGH    -> RED LED ON    (Green OFF, Yellow OFF)
  * 
- * DISCLAIMER:
- * Educational monitoring prototype for academic MCA project.
- * Not an automotive-certified life safety system.
+ * SYSTEM:
+ * Connected vehicle thermal sentinel and environmental telemetry node.
  * ==============================================================================
  */
 
@@ -409,7 +408,7 @@ void handleRootWebPage() {
   html += "<div><strong>Uptime:</strong> " + String(millis() / 1000) + " seconds</div>";
   html += "</div>";
 
-  html += "<div class='disclaimer'>Educational IoT prototype. Real-time telemetry automatically forwarded to Docker/PostgreSQL/React system.</div>";
+  html += "<div class='disclaimer'>Sentinel Car IoT Telemetry Node. Synchronized with Cloud Ingestion Stream.</div>";
   html += "</div></body></html>";
 
   server.send(200, "text/html", html);
